@@ -4,6 +4,7 @@ import com.jose.kardex.api.model.request.CreateKardexDto;
 import com.jose.kardex.api.model.response.CreatedKardexResponse;
 import com.jose.kardex.api.model.response.ProductLessThanUmbral;
 import com.jose.kardex.api.model.response.ProfitResponse;
+import com.jose.kardex.api.model.response.SimpleInfoKardexResponse;
 import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.infraestructure.abstract_service.IKardexService;
 import jakarta.validation.Valid;
@@ -30,6 +31,15 @@ public class KardexController {
     @RequestBody @Valid List<CreateKardexDto> dtos
   ) {
     CreatedKardexResponse response = this.kardexService.create(dtos);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping(path = "/simple-info")
+  public ResponseEntity<List<SimpleInfoKardexResponse>> getSimpleInfoKardex(
+    @RequestParam(name = "ids") List<Integer> ids
+  ) {
+    List<SimpleInfoKardexResponse> response =
+      this.kardexService.getSimpleInfoKardexs(ids);
     return ResponseEntity.ok(response);
   }
 

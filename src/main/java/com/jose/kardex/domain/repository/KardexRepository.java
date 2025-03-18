@@ -1,7 +1,7 @@
 package com.jose.kardex.domain.repository;
 
+import com.jose.kardex.api.model.projection.SimpleInfoKardex;
 import com.jose.kardex.domain.entity.Kardex;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
@@ -63,4 +63,22 @@ public interface KardexRepository
     @Param("startDate") LocalDate startDate,
     @Param("endDate") LocalDate endDate
   );
+
+  @Query(
+    value = """
+    SELECT
+    	distinct on
+    	(k.batch_id)
+    	k.batch_id,
+    	k.balance_amount,
+    	k.unit_price,
+    	k.product_id
+    from kardex k
+    WHERE k.batch_id in (:ids)
+    ORDER BY k.batch_id,
+    	k.created_at DESC
+      """,
+    nativeQuery = true
+  )
+  List<Object[]> getKardexSimpleInfoByIds(@Param("ids") List<Integer> ids);
 }

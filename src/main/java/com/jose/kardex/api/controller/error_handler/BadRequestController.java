@@ -3,6 +3,7 @@ package com.jose.kardex.api.controller.error_handler;
 import com.jose.kardex.api.model.response.ErrorResponse;
 import com.jose.kardex.api.model.response.ErrorsResponse;
 import com.jose.kardex.api.model.response.abstract_response.BaseErrorResponse;
+import com.jose.kardex.infraestructure.exception.KardexNotFoundException;
 import com.jose.kardex.infraestructure.exception.ProductNotFoundException;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class BadRequestController {
+
+  @ExceptionHandler(exception = KardexNotFoundException.class)
+  public BaseErrorResponse handleKardexNotFoundException(
+    KardexNotFoundException exception
+  ) {
+    return ErrorResponse.builder()
+      .error(exception.getMessage())
+      .status(HttpStatus.BAD_REQUEST.name())
+      .code(HttpStatus.BAD_REQUEST.value())
+      .build();
+  }
 
   @ExceptionHandler(exception = ProductNotFoundException.class)
   public BaseErrorResponse handleProductNotFoundException(
