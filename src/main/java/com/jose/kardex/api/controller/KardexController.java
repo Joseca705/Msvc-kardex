@@ -2,14 +2,18 @@ package com.jose.kardex.api.controller;
 
 import com.jose.kardex.api.model.request.CreateKardexDto;
 import com.jose.kardex.api.model.response.CreatedKardexResponse;
+import com.jose.kardex.api.model.response.ProductLessThanUmbral;
+import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.infraestructure.abstract_service.IKardexService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -25,5 +29,21 @@ public class KardexController {
   ) {
     CreatedKardexResponse response = this.kardexService.create(dtos);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping(path = "/less-than-umbral")
+  public ResponseEntity<
+    List<ProductLessThanUmbral>
+  > getProductsLessThanUmbralStock() {
+    return ResponseEntity.ok(this.kardexService.findProductsLessThanUmbral());
+  }
+
+  @GetMapping(path = "/top-selling-products")
+  public ResponseEntity<List<TopSellingProductsResponse>> getTopSellingProducts(
+    @RequestParam(name = "limit", defaultValue = "3") Integer limit
+  ) {
+    List<TopSellingProductsResponse> topProducts =
+      this.kardexService.findTopSellingProducts(limit);
+    return ResponseEntity.ok(topProducts);
   }
 }
