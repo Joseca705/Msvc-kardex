@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jose.kardex.api.model.request.CreateKardexDto;
 import com.jose.kardex.api.model.response.CreatedKardexResponse;
 import com.jose.kardex.api.model.response.ProductLessThanUmbral;
+import com.jose.kardex.api.model.response.ProfitDetailResponse;
+import com.jose.kardex.api.model.response.ProfitResponse;
 import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.domain.entity.Kardex;
 import com.jose.kardex.domain.repository.KardexRepository;
 import com.jose.kardex.domain.repository.ProductRepository;
 import com.jose.kardex.infraestructure.abstract_service.IKardexService;
 import com.jose.kardex.infraestructure.exception.ProductNotFoundException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -80,6 +85,39 @@ public class KardexService implements IKardexService {
         )
       )
       .toList();
+  }
+
+  @Override
+  public ProfitResponse getProfitBetweenDate(LocalDate start, LocalDate end) {
+    BigDecimal entrada = BigDecimal.ZERO;
+    BigDecimal salida = BigDecimal.ZERO;
+    List<ProfitDetailResponse> details = new ArrayList<>();
+
+    List<String> rawProducts =
+      this.kardexRepository.findDetailsProduct(start, end);
+
+    for (String raw : rawProducts) {
+      try {
+        ProfitDetailResponse detail = mapper.readValue(
+          raw,
+          ProfitDetailResponse.class
+        );
+        details.add(detail);
+
+        if (detail.getMovementType().equalsIgnoreCase("ENTRADA")) {
+          entrada = entrada.add(detail.getSubtotal());
+        } else {
+          salida = salida.add(detail.getSubtotal());
+        }
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Error parsing JSON", e);
+      }
+    }
+
+    return ProfitResponse.builder()
+      .profit(entrada.subtract(salida))
+      .details(details)
+      .build();
   }
 
   @Override

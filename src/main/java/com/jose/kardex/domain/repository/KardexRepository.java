@@ -1,9 +1,12 @@
 package com.jose.kardex.domain.repository;
 
 import com.jose.kardex.domain.entity.Kardex;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,4 +39,28 @@ public interface KardexRepository
     nativeQuery = true
   )
   List<String> findProductsLessThanUmbral();
+
+  @Query(
+    value = """
+    SELECT
+    	json_build_object(
+    	'productId', p.id,
+    	'name', p.name,
+    	'kardexId', k.id,
+    	'subtotal', k.total_price,
+    	'movementType', k.movement_type
+    	):: TEXT
+    FROM products p
+    LEFT JOIN kardex k on
+    	 p.id = k.product_id
+    WHERE
+    	k.created_at >= :startDate
+    	and k.created_at < :endDate
+      """,
+    nativeQuery = true
+  )
+  List<String> findDetailsProduct(
+    @Param("startDate") LocalDate startDate,
+    @Param("endDate") LocalDate endDate
+  );
 }
