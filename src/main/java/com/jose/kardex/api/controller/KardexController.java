@@ -34,7 +34,7 @@ public class KardexController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping(path = "/simple-info")
+  @GetMapping(path = "/current-amount-batch")
   public ResponseEntity<
     List<CurrentAmountBatchResponse>
   > getCurrentAmountBatchs(
