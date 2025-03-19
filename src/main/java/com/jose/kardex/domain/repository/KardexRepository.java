@@ -70,7 +70,6 @@ public interface KardexRepository
     	(k.batch_id)
     	k.batch_id,
     	k.balance_amount,
-    	k.unit_price,
     	k.product_id
     from kardex k
     WHERE k.batch_id in (:ids)

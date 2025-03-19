@@ -136,8 +136,7 @@ public class KardexService implements IKardexService {
         new SimpleInfoKardexResponse(
           ((Number) rawProduct[0]).intValue(),
           ((Number) rawProduct[1]).intValue(),
-          new BigDecimal(((Number) rawProduct[2]).intValue()),
-          ((Number) rawProduct[3]).intValue()
+          ((Number) rawProduct[2]).intValue()
         )
       )
       .toList();
