@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jose.kardex.api.model.request.CreateKardexDto;
 import com.jose.kardex.api.model.response.CreatedKardexResponse;
+import com.jose.kardex.api.model.response.CurrentAmountBatchResponse;
 import com.jose.kardex.api.model.response.ProductLessThanUmbral;
 import com.jose.kardex.api.model.response.ProfitDetailResponse;
 import com.jose.kardex.api.model.response.ProfitResponse;
-import com.jose.kardex.api.model.response.SimpleInfoKardexResponse;
 import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.domain.entity.Kardex;
 import com.jose.kardex.domain.repository.KardexRepository;
@@ -122,7 +122,7 @@ public class KardexService implements IKardexService {
   }
 
   @Override
-  public List<SimpleInfoKardexResponse> getSimpleInfoKardexs(
+  public List<CurrentAmountBatchResponse> getCurrentAmountBatchs(
     List<Integer> ids
   ) {
     List<Object[]> rawKardexs =
@@ -133,10 +133,9 @@ public class KardexService implements IKardexService {
     return rawKardexs
       .stream()
       .map(rawProduct ->
-        new SimpleInfoKardexResponse(
+        new CurrentAmountBatchResponse(
           ((Number) rawProduct[0]).intValue(),
-          ((Number) rawProduct[1]).intValue(),
-          ((Number) rawProduct[2]).intValue()
+          ((Number) rawProduct[1]).intValue()
         )
       )
       .toList();

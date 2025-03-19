@@ -2,9 +2,9 @@ package com.jose.kardex.api.controller;
 
 import com.jose.kardex.api.model.request.CreateKardexDto;
 import com.jose.kardex.api.model.response.CreatedKardexResponse;
+import com.jose.kardex.api.model.response.CurrentAmountBatchResponse;
 import com.jose.kardex.api.model.response.ProductLessThanUmbral;
 import com.jose.kardex.api.model.response.ProfitResponse;
-import com.jose.kardex.api.model.response.SimpleInfoKardexResponse;
 import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.infraestructure.abstract_service.IKardexService;
 import jakarta.validation.Valid;
@@ -35,11 +35,13 @@ public class KardexController {
   }
 
   @GetMapping(path = "/simple-info")
-  public ResponseEntity<List<SimpleInfoKardexResponse>> getSimpleInfoKardex(
+  public ResponseEntity<
+    List<CurrentAmountBatchResponse>
+  > getCurrentAmountBatchs(
     @RequestParam(name = "ids", required = true) List<Integer> ids
   ) {
-    List<SimpleInfoKardexResponse> response =
-      this.kardexService.getSimpleInfoKardexs(ids);
+    List<CurrentAmountBatchResponse> response =
+      this.kardexService.getCurrentAmountBatchs(ids);
     return ResponseEntity.ok(response);
   }
 

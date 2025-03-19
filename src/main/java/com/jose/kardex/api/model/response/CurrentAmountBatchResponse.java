@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleInfoKardexResponse {
+public class CurrentAmountBatchResponse {
 
   private Integer batchId;
 
   private Integer balanceAmount;
-
-  private Integer productId;
 }

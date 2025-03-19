@@ -69,8 +69,7 @@ public interface KardexRepository
     	distinct on
     	(k.batch_id)
     	k.batch_id,
-    	k.balance_amount,
-    	k.product_id
+    	k.balance_amount
     from kardex k
     WHERE k.batch_id in (:ids)
     ORDER BY k.batch_id,
