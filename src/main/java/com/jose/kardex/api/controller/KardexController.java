@@ -36,7 +36,7 @@ public class KardexController {
 
   @GetMapping(path = "/simple-info")
   public ResponseEntity<List<SimpleInfoKardexResponse>> getSimpleInfoKardex(
-    @RequestParam(name = "ids") List<Integer> ids
+    @RequestParam(name = "ids", required = true) List<Integer> ids
   ) {
     List<SimpleInfoKardexResponse> response =
       this.kardexService.getSimpleInfoKardexs(ids);
@@ -52,7 +52,11 @@ public class KardexController {
 
   @GetMapping(path = "/top-selling-products")
   public ResponseEntity<List<TopSellingProductsResponse>> getTopSellingProducts(
-    @RequestParam(name = "limit", defaultValue = "3") Integer limit
+    @RequestParam(
+      name = "limit",
+      defaultValue = "5",
+      required = false
+    ) Integer limit
   ) {
     List<TopSellingProductsResponse> topProducts =
       this.kardexService.findTopSellingProducts(limit);
