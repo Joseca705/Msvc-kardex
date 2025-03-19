@@ -1,6 +1,5 @@
 package com.jose.kardex.domain.repository;
 
-import com.jose.kardex.api.model.projection.SimpleInfoKardex;
 import com.jose.kardex.domain.entity.Kardex;
 import java.time.LocalDate;
 import java.util.List;
