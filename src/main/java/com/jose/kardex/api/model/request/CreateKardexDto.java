@@ -1,5 +1,6 @@
 package com.jose.kardex.api.model.request;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,10 @@ public class CreateKardexDto {
   private Integer balanceAmount;
 
   @NotNull(message = "El campo unitPrice no debe ser nulo.")
-  @Min(value = 1, message = "El valor de unitPrice debe ser mayor a 1.")
+  @DecimalMin(
+    value = "0.10",
+    message = "El valor de unitPrice debe ser mayor a 0.10."
+  )
   @Digits(
     integer = 38,
     fraction = 4,
