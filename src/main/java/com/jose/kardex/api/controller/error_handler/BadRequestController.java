@@ -6,6 +6,7 @@ import com.jose.kardex.api.model.response.ErrorsResponse;
 import com.jose.kardex.api.model.response.abstract_response.BaseErrorResponse;
 import com.jose.kardex.infraestructure.exception.KardexNotFoundException;
 import com.jose.kardex.infraestructure.exception.ProductNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,6 +82,17 @@ public class BadRequestController {
   @ExceptionHandler(exception = MethodArgumentTypeMismatchException.class)
   public ErrorResponse handleMissingServletRequestParameterException(
     MethodArgumentTypeMismatchException exception
+  ) {
+    return ErrorResponse.builder()
+      .error(exception.getMessage())
+      .status(HttpStatus.BAD_REQUEST.name())
+      .code(HttpStatus.BAD_REQUEST.value())
+      .build();
+  }
+
+  @ExceptionHandler(exception = ConstraintViolationException.class)
+  public ErrorResponse handleConstraintViolationException(
+    ConstraintViolationException exception
   ) {
     return ErrorResponse.builder()
       .error(exception.getMessage())
