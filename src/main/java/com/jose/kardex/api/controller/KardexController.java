@@ -8,10 +8,14 @@ import com.jose.kardex.api.model.response.ProfitResponse;
 import com.jose.kardex.api.model.response.TopSellingProductsResponse;
 import com.jose.kardex.infraestructure.abstract_service.IKardexService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/kardex")
+@Validated
 public class KardexController {
 
   private final IKardexService kardexService;
@@ -38,7 +43,10 @@ public class KardexController {
   public ResponseEntity<
     List<CurrentAmountBatchResponse>
   > getCurrentAmountBatchs(
-    @RequestParam(name = "ids", required = true) List<Integer> ids
+    @NotEmpty(message = "El campo no debe estar vacio.") @RequestParam(
+      name = "ids",
+      required = true
+    ) List<@Positive Integer> ids
   ) {
     List<CurrentAmountBatchResponse> response =
       this.kardexService.getCurrentAmountBatchs(ids);
@@ -58,7 +66,7 @@ public class KardexController {
       name = "limit",
       defaultValue = "5",
       required = false
-    ) Integer limit
+    ) @Positive Integer limit
   ) {
     List<TopSellingProductsResponse> topProducts =
       this.kardexService.findTopSellingProducts(limit);
@@ -67,8 +75,12 @@ public class KardexController {
 
   @GetMapping(path = "/profit")
   public ResponseEntity<ProfitResponse> getGananciaObtenidaEnRangoDeFechas(
-    @RequestParam(required = true, name = "start") LocalDate start,
-    @RequestParam(required = true, name = "end") LocalDate end
+    @RequestParam(required = true, name = "start") @DateTimeFormat(
+      pattern = "yyyy-MM-dd"
+    ) LocalDate start,
+    @RequestParam(required = true, name = "end") @DateTimeFormat(
+      pattern = "yyyy-MM-dd"
+    ) LocalDate end
   ) {
     ProfitResponse profit = this.kardexService.getProfitBetweenDate(start, end);
     return ResponseEntity.ok(profit);
